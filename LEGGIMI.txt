@@ -1,0 +1,11 @@
+Comando per impostare il numero di threads (solo in locale) set OMP_NUM_THREADS={NUMERO_THREADS}
+
+Comando per compilare
+gcc -fopenmp -lgomp -o main.exe main.c
+
+Comando per eseguire
+./main.exe NUMERO_RIGHE NUMERO_COLONNE NASCONDI_OUTPUT_INIZIALE NASCONDI_OUTPUT_FINALE
+
+Questi 2 parametri possono assumere come valore 0 o 1:
+NASCONDI_OUTPUT_INIZIALE 
+NASCONDI_OUTPUT_FINALE
