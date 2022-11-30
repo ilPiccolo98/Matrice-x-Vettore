@@ -28,6 +28,7 @@ void print_matrix(double *matrix, int rows, int columns)
     int row, column;
     for(row = 0; row != rows; ++row)
     {
+        printf("Row: %d\n", row + 1);
         for(column = 0; column != columns; ++column)
             printf("%f ", matrix[row * columns + column]);
         puts("");
@@ -38,7 +39,7 @@ void print_vector(double *vector, int size)
 {
     int i;
     for(i = 0; i != size; ++i)
-        printf("%f ", vector[i]);
+        printf("%f\n", vector[i]);
     puts("");
 }
 
@@ -49,7 +50,13 @@ int get_rows_from_input(int argc, char *argv[])
         fprintf(stderr, "Error! Not enough argv arguments\n");
         exit(-1);
     }
-    return atoi(argv[INDEX_ROWS]);
+    int rows = atoi(argv[INDEX_ROWS]);
+    if(rows <= 0)
+    {
+        fprintf(stderr, "Error! Rows parameter has incorrect value\n");
+        exit(-1);
+    }
+    return rows;
 }
 
 int get_columns_from_input(int argc, char *argv[])
@@ -59,7 +66,13 @@ int get_columns_from_input(int argc, char *argv[])
         fprintf(stderr, "Error! Not enough argv arguments\n");
         exit(-1);
     }
-    return atoi(argv[INDEX_COLUMNS]);
+    int columns = atoi(argv[INDEX_COLUMNS]);
+    if(columns <= 0)
+    {
+        fprintf(stderr, "Error! Columns parameter has incorrect value\n");
+        exit(-1);
+    }
+    return columns;
 }
 
 double get_random_number(double min, double max)
@@ -94,7 +107,13 @@ int get_hide_init_output(int argc, char *argv[])
         fprintf(stderr, "Error! Not enough argv arguments\n");
         exit(-1);
     }
-    return atoi(argv[INDEX_HIDE_INIT_OUTPUT]);
+    int hide_init_output = atoi(argv[INDEX_HIDE_INIT_OUTPUT]); 
+    if(hide_init_output != 0 && hide_init_output != 1)
+    {
+        fprintf(stderr, "Error! Hide init output parameter has incorrect value\n");
+        exit(-1);
+    }
+    return hide_init_output;
 }
 
 int get_hide_last_output(int argc, char *argv[])
@@ -104,7 +123,13 @@ int get_hide_last_output(int argc, char *argv[])
         fprintf(stderr, "Error! Not enough argv arguments\n");
         exit(-1);
     }
-    return atoi(argv[INDEX_HIDE_LAST_OUTPUT]);
+    int hide_last_output = atoi(argv[INDEX_HIDE_LAST_OUTPUT]); 
+    if(hide_last_output != 0 && hide_last_output != 1)
+    {
+        fprintf(stderr, "Error! Hide last output parameter has incorrect value\n");
+        exit(-1);
+    }
+    return hide_last_output;
 }
 
 int main(int argc, char *argv[])
@@ -119,9 +144,9 @@ int main(int argc, char *argv[])
     double *vector = init_vector(vector_size);
     if(!hide_init_output)
     {
-        puts("GENERATED MATRIX----------------------------------");
+        puts("\nGENERATED MATRIX----------------------------------");
         print_matrix(matrix, matrix_rows, matrix_columns);
-        puts("GENERATED VECTOR----------------------------------");
+        puts("\nGENERATED VECTOR----------------------------------");
         print_vector(vector, vector_size);
     }
     struct timeval time;
@@ -132,7 +157,10 @@ int main(int argc, char *argv[])
     gettimeofday(&time, NULL);
     end = time.tv_sec + (time.tv_usec / 1000000.0);
     if(!hide_last_output)
-        print_vector(product, matrix_columns);
+    {
+        puts("\nPRODUCT OF THE OPERATION");
+        print_vector(product, matrix_rows);
+    }
     printf("Operation executed in %f seconds\n", end - beginning);
     free(matrix);
     free(vector);
