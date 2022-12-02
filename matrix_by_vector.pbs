@@ -1,49 +1,17 @@
 #!/bin/bash
-##########################
-# #
-# The PBS directives #
-# #
-##########################
+
 #PBS -q studenti
-#PBS -l nodes=1:ppn=8 # si riservano così 8 processori su un nodo. Se ne servono meno, si può mettere un numero minore.
-#PBS –N matrix_by_vector
+#PBS -l nodes=1:ppn=8
+#PBS -N matrix_by_vector
 #PBS -o matrix_by_vector.out
 #PBS -e matrix_by_vector.err
-##########################################
-# -q coda su cui va eseguito il job #
-# -l numero di nodi richiesti #
-# -N nome job(stesso del file pbs) #
-# -o, -e nome files contenente l’output #
-##########################################
-# #
-# qualche informazione sul job #
-# #
-##########################################
-echo 'Job is running on node(s): '
-cat $PBS_NODEFILE
-PBS_O_WORKDIR=$PBS_O_HOME/matrix_by_vector_project
-echo ------------------------------------------------------
-echo PBS: qsub is running on $PBS_O_HOST
-echo PBS: originating queue is $PBS_O_QUEUE
-echo PBS: executing queue is $PBS_QUEUE
-echo PBS: working directory is $PBS_O_WORKDIR
-echo PBS: execution mode is $PBS_ENVIRONMENT
-echo PBS: job identifier is $PBS_JOBID
-echo PBS: job name is $PBS_JOBNAME
-echo PBS: node file is $PBS_NODEFILE
-echo PBS: current home directory is $PBS_O_HOME
-echo PBS: PATH = $PBS_O_PATH
-echo ------------------------------------------------------
-export PSC_OMP_AFFINITY=TRUE # per legare i thread a particolari processori
-echo "Compilo...”
-gcc -fopenmp -lgomp -o $PBS_O_WORKDIR/matrix_by_vector $PBS_O_WORKDIR/matrix_by_vector.c
-# nell'esempio il primo argomento è il numero di thread da utilizzare e il secondo la dimensione n
-# il numero di thread deve essere minore o uguale del numero di processori riservati sul nodo
-echo "Eseguo...”
 
-for i in 1 2 3 4 5 6 7 8
-do
-    echo "Executing with $i processors"
-    export OMP_NUM_THREADS=i
-    $PBS_O_WORKDIR/matrix_by_vector 1000 2000 1 1
-done
+cat $PBS_NODEFILE
+
+PBS_O_WORKDIR=$PBS_O_HOME/matrix_by_vector_project
+
+export OMP_NUM_THREADS=2
+export PSC_OMP_AFFINITY=TRUE
+gcc -fopenmp -lgomp -o $PBS_O_WORKDIR/matrix_by_vector $PBS_O_WORKDIR/main.c
+
+$PBS_O_WORKDIR/matrix_by_vector 10 10 0 0

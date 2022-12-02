@@ -12,7 +12,7 @@
 #define MIN_RANDOM_NUMBER 10000
 #define MAX_RANDOM_NUMBER -10000
 
-double* matrix_by_vector(double *restrict matrix, int rows, int columns, double *restrict vector)
+double* matrix_by_vector(double *matrix, int rows, int columns, double *vector)
 {
     int row, column;
     double *product = (double*)calloc(columns, sizeof(double));
