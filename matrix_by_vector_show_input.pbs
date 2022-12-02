@@ -1,0 +1,17 @@
+#!/bin/bash
+
+#PBS -q studenti
+#PBS -l nodes=1:ppn=8
+#PBS -N matrix_by_vector_show_input
+#PBS -o matrix_by_vector_show_input.out
+#PBS -e matrix_by_vector_show_input.err
+
+cat $PBS_NODEFILE
+
+PBS_O_WORKDIR=$PBS_O_HOME/matrix_by_vector_project
+
+export OMP_NUM_THREADS=3
+export PSC_OMP_AFFINITY=TRUE
+gcc -fopenmp -lgomp -o $PBS_O_WORKDIR/matrix_by_vector $PBS_O_WORKDIR/main.c
+
+$PBS_O_WORKDIR/matrix_by_vector 10 5 0 1
